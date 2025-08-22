@@ -10,6 +10,7 @@ doctest = false
 
 [dependencies]
 soroban-sdk = { workspace = true }
+phone_book = { path = "../phone_book"}
 
 [dev-dependencies]
 soroban-sdk = { workspace = true, features = ["testutils"] }
