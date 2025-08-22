@@ -1,17 +1,6 @@
 #![no_std]
-// use soroban_sdk::{contract, contractimpl, vec, Env, String, Vec};
 
-// #[contract]
-// pub struct Contract;
-
-// #[contractimpl]
-// impl Contract {
-//     pub fn hello(env: Env, to: String) -> Vec<String> {
-//         vec![&env, String::from_str(&env, "Hello"), to]
-//     }
-// }
-
-use soroban_sdk::{contract, contractimpl, contracttype, xdr::Uint256, Address, Env, String, U256};
+use soroban_sdk::{contract, contractimpl, contracttype, Address, Env, String,};
 
 mod test;
 
@@ -63,7 +52,6 @@ impl PhoneBook {
     }
 
     pub fn remove_contact(env: Env, name: String) {
-        // Verify caller is the owner
         let owner: Address = env.storage().instance().get(&PhoneBookKey::Owner)
             .expect("Contract not initialized");
         owner.require_auth();
@@ -74,5 +62,17 @@ impl PhoneBook {
         }
         
         env.storage().instance().remove(&PhoneBookKey::Contact(name));
+    }
+
+    pub fn update_contact(env: Env, name: String, new_mobile: String) {
+        let owner: Address = env.storage().instance().get(&PhoneBookKey::Owner)
+            .expect("Contract not initialized");
+        owner.require_auth();
+
+        let mut contact_info: ContactInfo = env.storage().instance().get(&PhoneBookKey::Contact(name.clone())).expect(""); 
+
+        contact_info.mobile_number = new_mobile;
+
+        env.storage().instance().set(&PhoneBookKey::Contact(name), &contact_info);
     }
 }
